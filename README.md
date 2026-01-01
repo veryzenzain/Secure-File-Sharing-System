@@ -1,31 +1,43 @@
-# Project 2 Starter Code
+# Secure File Sharing System (Go)
 
-This repository contains the starter code for Project 2!
+End-to-end encrypted file storage + sharing client built for an **untrusted** backend (Datastore/Keystore). The server can read/modify/snapshot everything, so the client is responsible for confidentiality, integrity, sharing, and revocation.
 
-For comprehensive documentation, see the Project 2 Spec (https://cs161.org/proj2/).
+## Highlights
 
-A friendly request: please do not make your solution public!
+- **User authentication** with password-based key derivation and tamper-detecting user state
+- **Confidential + integrity-protected** file contents and metadata (server can’t read or silently modify)
+- **Efficient appends**: bandwidth scales with *append size*, not total file size
+- **Secure sharing** via signed/encrypted invitations (supports re-sharing)
+- **Owner-driven revocation** (revokes a user + their downstream share tree)
 
-Write your implementation in `client/client.go` and your integration tests in `client_test/client_test.go`. Optionally, you can also use `client/client_unittest.go` to write unit tests (e.g: to test your helper functions).
 
-To test your implementation, run `go test -v` inside of the `client_test` directory. This will run all tests in both `client/client_unittest.go` and `client_test/client_test.go`.
+## Threat Model (what we defend against)
 
-## Project Members
+- Datastore adversary can **list / read / modify** any stored values and take **snapshots** to compare changes.
+- Keystore is public and only stores **public keys** (no secrets).
+- No concurrency: assume only one API call runs at a time, and attacks only happen *between* calls.
+- Design is **stateless** across runs: no persistent local state; everything needed to resume is stored remotely.
 
-Fill in this section with the student IDs of all the members in your project group.
 
-Partner 1 Name: Shea Hamilton   
+## Public API
 
-Partner 1 SID: 3037713811
+This implementation exposes the standard client API:
 
-Partner 1 Email: sheah2411@berkeley.edu
+- `InitUser(username, password)`
+- `GetUser(username, password)`
+- `(*User) StoreFile(filename, content)`
+- `(*User) LoadFile(filename)`
+- `(*User) AppendToFile(filename, content)`
+- `(*User) CreateInvitation(filename, recipientUsername)`
+- `(*User) AcceptInvitation(senderUsername, invitationPtr, filename)`
+- `(*User) RevokeAccess(filename, recipientUsername)`
 
-Partner 2 Name (if applicable): Zain Mustafa
 
-Partner 2 SID (if applicable): 3039098701
+## Repo Layout
 
-Partner 2 Email (if applicable): zainmustafa@berkeley.edu
+- `client/`
+  - `client.go` — core implementation (all required API methods + helpers)
+- `client_test/`
+  - `client_test.go` — integration tests (black-box style)
+  - `client_unittest.go` — optional unit tests for design-specific helpers
 
-Also add a link to this repo below (should start with https://github.com/cs161-students/).
-
-Link to this Github repo: https://github.com/cs161-students/su25-proj2-team-443
