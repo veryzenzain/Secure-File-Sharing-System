@@ -1,37 +1,17 @@
 package client
 
-// CS 161 Project 2
-
-// Only the following imports are allowed! ANY additional imports
-// may break the autograder!
-// - bytes
-// - encoding/hex
-// - encoding/json
-// - errors
-// - fmt
-// - github.com/cs161-staff/project2-userlib
-// - github.com/google/uuid
-// - strconv
-// - strings
-
 import (
 	"encoding/json"
 
 	userlib "github.com/cs161-staff/project2-userlib"
 	"github.com/google/uuid"
 
-	// hex.EncodeToString(...) is useful for converting []byte to string
-
-	// Useful for string manipulation
 	_ "strings"
 
-	// Useful for formatting strings (e.g. `fmt.Sprintf`).
 	"fmt"
 
-	// Useful for creating new error messages to return using errors.New("...")
 	"errors"
 
-	// Optional.
 	_ "strconv"
 )
 
